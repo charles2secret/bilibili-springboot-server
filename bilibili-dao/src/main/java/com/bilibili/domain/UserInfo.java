@@ -22,6 +22,8 @@ public class UserInfo {
 
     private Date updateTime;
 
+    private Boolean followed; // true means already followed, false means not yet
+
     public Long getId() {
         return id;
     }
@@ -94,4 +96,11 @@ public class UserInfo {
         this.updateTime = updateTime;
     }
 
+    public Boolean getFollowed() {
+        return followed;
+    }
+
+    public void setFollowed(Boolean followed) {
+        this.followed = followed;
+    }
 }
