@@ -4,6 +4,9 @@ import com.api.support.UserSupport;
 import com.bilibili.domain.FollowingGroup;
 import com.bilibili.domain.JsonResponse;
 import com.bilibili.domain.UserFollowing;
+import com.bilibili.domain.annotation.ApiLimitedRole;
+import com.bilibili.domain.annotation.DataLimited;
+import com.bilibili.domain.constant.AuthRoleConstant;
 import com.bilibili.service.UserFollowingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +25,9 @@ public class UserFollowingApi {
     @Autowired
     private UserSupport userSupport;
 
+    // if the user is Lv0, then he or she can not follow others
+    // the code will go to the aspect when reach this point cut
+    @ApiLimitedRole(limitedRoleCodeList = {AuthRoleConstant.ROLE_CODE_LV0})
     @PostMapping("/user-followings")
     public JsonResponse<String> addUserFollowings (@RequestBody UserFollowing userFollowing) {
         Long userId = userSupport.getCurrentUserId();
@@ -45,6 +51,7 @@ public class UserFollowingApi {
 
     }
 
+    @DataLimited
     @PostMapping("/user-following-groups")
     public JsonResponse<Long> addUserFollowingGroups(@RequestBody FollowingGroup followingGroup) {
         Long userId = userSupport.getCurrentUserId();

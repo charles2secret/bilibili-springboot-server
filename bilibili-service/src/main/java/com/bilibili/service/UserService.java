@@ -25,6 +25,9 @@ public class UserService {
     @Autowired
     private UserDao userDao;
 
+    @Autowired
+    private UserAuthService userAuthService;
+
     public void addUser(User user) {
         String phone = user.getPhone();
         // check if the phone number is empty
@@ -60,6 +63,8 @@ public class UserService {
         userInfo.setGender(UserConstant.GENDER_MALE);
         userInfo.setCreateTime(now);
         userDao.addUserInfo(userInfo);
+        // add Default user role
+        userAuthService.addUserDefaultRole(user.getId());
     }
 
     public User getUserByPhone(String phone) {

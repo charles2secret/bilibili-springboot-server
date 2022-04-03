@@ -20,7 +20,7 @@ public class TokenUtil {
         // it can last 30 seconds
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.add(Calendar.SECOND, 30);
+        calendar.add(Calendar.SECOND, 500);
         return JWT.create().withKeyId(String.valueOf(userId))
                 .withIssuer(ISSUER)
                 .withExpiresAt(calendar.getTime())
