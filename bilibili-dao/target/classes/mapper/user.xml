@@ -117,7 +117,7 @@
             1=1
             <if test="userIdList != null and userIdList.size > 0">
                 and userId in
-                <foreach collection="userIdList" item = "userId" index = "index" open = "(" close=")" separator=",">
+                <foreach collection="userIdList" item = "userId" index = "index" open = "(" close = ")" separator = ",">
                     #{userId}
                 </foreach>
             </if>
@@ -148,6 +148,36 @@
             </if>
         order by id desc
         limit #{start}, #{limit}
+    </select>
+
+    <delete id="deleteRefreshToken">
+        delete from
+            t_refresh_token
+        where
+            refreshToken = #{refreshToken}
+    </delete>
+    
+    <insert id="addRefreshToken">
+        insert into
+            t_refresh_token (
+                refreshToken,
+                userId,
+                createTime
+            )values(
+                #{refreshToken},
+                #{userId},
+                #{createTime}
+            )
+
+    </insert>
+
+    <select id="getRefreshTokenDetail" parameterType="java.lang.String" resultType="com.bilibili.domain.RefreshTokenDetail">
+        select
+            *
+        from
+            t_refresh_token
+        where
+            refreshToken = #{refreshToken}
     </select>
 
 

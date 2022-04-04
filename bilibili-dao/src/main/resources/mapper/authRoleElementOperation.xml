@@ -23,10 +23,10 @@
             t_auth_role_element_operation areo
             left join t_auth_element_operation aeo on areo.elementOperationId = aeo.id
         where
-            areo.roleId in
-            <foreach collection="roleIdSet" item="roleId" index="index" open="(" close=")" separator=",">
+              areo.roleId in
+              <foreach collection="roleIdSet" item="roleId" index="index" open="(" close=")" separator=",">
                 #{roleId}
-            </foreach>
+              </foreach>
     </select>
 
 </mapper>

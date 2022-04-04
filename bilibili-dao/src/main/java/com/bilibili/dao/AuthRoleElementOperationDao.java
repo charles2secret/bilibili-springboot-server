@@ -3,6 +3,7 @@ package com.bilibili.dao;
 import com.bilibili.domain.auth.AuthRoleElementOperation;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Set;

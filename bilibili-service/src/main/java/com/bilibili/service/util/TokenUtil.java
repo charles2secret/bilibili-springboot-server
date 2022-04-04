@@ -20,7 +20,7 @@ public class TokenUtil {
         // it can last 30 seconds
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.add(Calendar.SECOND, 500);
+        calendar.add(Calendar.HOUR, 1);
         return JWT.create().withKeyId(String.valueOf(userId))
                 .withIssuer(ISSUER)
                 .withExpiresAt(calendar.getTime())
@@ -42,5 +42,18 @@ public class TokenUtil {
         }
 
 
+    }
+
+    public static String generateRefreshToken(Long userId) throws Exception{
+        // use RSA256 to encrypt
+        Algorithm algorithm = Algorithm.RSA256(RSAUtil.getPublicKey(), RSAUtil.getPrivateKey());
+        // it can last 30 seconds
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_MONTH, 7);
+        return JWT.create().withKeyId(String.valueOf(userId))
+                .withIssuer(ISSUER)
+                .withExpiresAt(calendar.getTime())
+                .sign(algorithm);
     }
 }
