@@ -71,15 +71,26 @@ public class UserService {
 
     public String login(User user) throws Exception{
         String phone = user.getPhone();
+        String email = user.getEmail();
+        User dbUser = new User();
         // check if the phone number is empty
-        if (StringUtils.isNullOrEmpty(phone)) {
-            throw new ConditionException("Phone number can't be empty!");
+        if (StringUtils.isNullOrEmpty(phone) && StringUtils.isNullOrEmpty(email)) {
+            throw new ConditionException("Phone number and email can't be empty!");
         }
-        // check in the database if the user exists
-        User dbUser = this.getUserByPhone(phone);
-        if (dbUser == null) {
-            throw new ConditionException("The user doesn't exist!");
+        else if (StringUtils.isNullOrEmpty(email)) {
+            // check in the database if the user exists
+            dbUser = this.getUserByPhone(phone);
+            if (dbUser == null) {
+                throw new ConditionException("The user doesn't exist!");
+            }
         }
+        else {
+            dbUser = this.getUserByEmail(email);
+            if (dbUser == null) {
+                throw new ConditionException("The user doesn't exist!");
+            }
+        }
+
         String password = user.getPassword();
         String rawPassword;
         try {
@@ -96,6 +107,8 @@ public class UserService {
         // if passed, return a token
         return TokenUtil.generateToken(dbUser.getId());
     }
+
+    private User getUserByEmail(String email) { return userDao.getUserByEmail(email);}
 
     public User getUserInfo(Long userId) {
         User user = userDao.getUserById(userId);

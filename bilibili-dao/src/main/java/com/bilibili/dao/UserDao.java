@@ -17,6 +17,8 @@ public interface UserDao {
 
     User getUserByPhone(String phone);
 
+    User getUserByEmail(String email);
+
     Integer addUser(User user);
 
     Integer addUserInfo(UserInfo userInfo);
@@ -43,4 +45,6 @@ public interface UserDao {
                             @Param("createTime") Date date);
 
     RefreshTokenDetail getRefreshTokenDetail(String refreshToken);
+
+
 }
