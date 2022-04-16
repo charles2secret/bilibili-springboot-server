@@ -1,21 +1,31 @@
 package com.bilibili.domain;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+
 import java.util.Date;
 
+@Document(indexName = "users")
 public class User {
 
+    @Id
     private Long id;
 
     private String phone;
 
+    @Field(type = FieldType.Text)
     private String email;
 
     private String password;
 
     private String salt;
 
+    @Field(type = FieldType.Date)
     private Date createTime;
 
+    @Field(type = FieldType.Date)
     private Date updateTime;
 
     private UserInfo userInfo;

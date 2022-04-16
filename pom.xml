@@ -87,6 +87,7 @@
             <artifactId>fastdfs-client</artifactId>
             <version>1.27.2</version>
         </dependency>
+
     </dependencies>
 
     <modules>

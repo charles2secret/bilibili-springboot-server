@@ -6,6 +6,7 @@ import com.bilibili.domain.JsonResponse;
 import com.bilibili.domain.PageResult;
 import com.bilibili.domain.User;
 import com.bilibili.domain.UserInfo;
+import com.bilibili.service.ElasticSearchService;
 import com.bilibili.service.UserFollowingService;
 import com.bilibili.service.UserService;
 import com.bilibili.service.util.RSAUtil;
@@ -28,6 +29,9 @@ public class UserApi {
     @Autowired
     private UserFollowingService userFollowingService;
 
+    @Autowired
+    private ElasticSearchService elasticSearchService;
+
     @GetMapping("/users")
     public JsonResponse<User> getUserInfo() {
         Long userId = userSupport.getCurrentUserId();
@@ -41,9 +45,17 @@ public class UserApi {
         return new JsonResponse<>(pk);
     }
 
+    @GetMapping("/es-users")
+    public JsonResponse<User> getEsVideos(@RequestParam String keyword) {
+        User user = elasticSearchService.getUser(keyword);
+        return new JsonResponse<>(user);
+    }
+
     @PostMapping("/users")
     public JsonResponse<String> addUser(@RequestBody User user) {
         userService.addUser(user);
+        // add user info in ES
+        elasticSearchService.addUser(user);
         return JsonResponse.success();
     }
 

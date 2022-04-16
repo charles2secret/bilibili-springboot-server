@@ -25,10 +25,10 @@ public class FastDFSUtil {
     private FastFileStorageClient fastFileStorageClient;
 
     @Autowired
-    private AppendFileStorageClient appendFileStorageClient;
+    private static AppendFileStorageClient appendFileStorageClient;
 
     @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+    private static RedisTemplate<String, String> redisTemplate;
 
     private static final String DEFAULT_GROUP = "group1";
 
@@ -40,7 +40,7 @@ public class FastDFSUtil {
 
     private static final int SLICE_SIZE = 1024 * 1024 * 2;
 
-    public String getFileType(MultipartFile file) {
+    public static String getFileType(MultipartFile file) {
         if (file == null) {
             throw new ConditionException("Wrong file!");
         }
@@ -57,18 +57,18 @@ public class FastDFSUtil {
         return storePath.getPath();
     }
 
-    public String uploadAppenderFile(MultipartFile file) throws Exception {
+    public static String uploadAppenderFile(MultipartFile file) throws Exception {
         String fileName = file.getOriginalFilename();
-        String fileType = this.getFileType(file);
+        String fileType = getFileType(file);
         StorePath storePath = appendFileStorageClient.uploadAppenderFile(DEFAULT_GROUP, file.getInputStream(), file.getSize(), fileType);
         return storePath.getPath();
     }
 
-    public void modifyAppenderFile(MultipartFile file, String filePath, long offset) throws Exception {
+    public static void modifyAppenderFile(MultipartFile file, String filePath, long offset) throws Exception {
         appendFileStorageClient.modifyFile(DEFAULT_GROUP, filePath, file.getInputStream(), file.getSize(), offset);
     }
 
-    public String uploadFileBySlices(MultipartFile file, String fileMd5, Integer sliceNo, Integer totalSliceNo) throws Exception {
+    public static String uploadFileBySlices(MultipartFile file, String fileMd5, Integer sliceNo, Integer totalSliceNo) throws Exception {
         if (file == null || sliceNo == null || totalSliceNo == null) {
             throw new ConditionException("Wrong Parameters!");
         }
@@ -80,10 +80,10 @@ public class FastDFSUtil {
         if (!StringUtil.isNullOrEmpty(uploadedSizeStr)) {
             uploadedSize = Long.valueOf(uploadedSizeStr);
         }
-        String fileType = this.getFileType(file);
+        String fileType = getFileType(file);
         // it is the first slice, use uploadAppenderFile
         if (sliceNo == 1) {
-            String path = this.uploadAppenderFile(file);
+            String path = uploadAppenderFile(file);
             if (StringUtil.isNullOrEmpty(path)) {
                 throw new ConditionException("Upload failed!");
             }
@@ -96,7 +96,7 @@ public class FastDFSUtil {
             if (StringUtil.isNullOrEmpty(filePath)) {
                 throw new ConditionException("Upload failed!");
             }
-            this.modifyAppenderFile(file, filePath, uploadedSize);
+            modifyAppenderFile(file, filePath, uploadedSize);
             redisTemplate.opsForValue().increment(uploadedNoKey);
         }
         uploadedSize += file.getSize();
